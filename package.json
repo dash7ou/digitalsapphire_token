@@ -1,0 +1,51 @@
+{
+  "name": "openergy-smartcontract",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "formate": "prettier --write .",
+    "compile": "hardhat compile",
+    "test": "hardhat test test/*.ts --network hardhat",
+    "watch": "npx hardhat run scripts/watch.ts --network hardhat",
+    "deploy:hardhat": "npx hardhat run scripts/deploy.ts --network hardhat",
+    "deploy:goerli": "npx hardhat run scripts/deploy.ts --network goerli",
+    "deploy:bsctest": "npx hardhat run scripts/deploy.ts --network bsc_testnet",
+    "deploy:mainnet": "npx hardhat run scripts/deploy.ts --network mainnet",
+    "deploy:bsc": "npx hardhat run scripts/deploy.ts --network bsc_mainnet"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.1",
+    "@types/ramda": "^0.28.23",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "hardhat": "^2.12.7",
+    "prettier": "^2.8.4",
+    "prettier-plugin-solidity": "^1.1.2"
+  },
+  "dependencies": {
+    "@nomiclabs/hardhat-etherscan": "^3.1.6",
+    "@nomiclabs/hardhat-waffle": "^2.0.5",
+    "@openzeppelin/contracts": "^4.8.1",
+    "@typechain/hardhat": "^6.1.5",
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v2-periphery": "^1.1.0-beta.0",
+    "chalk": "^4",
+    "dotenv": "^16.0.3",
+    "hardhat-contract-sizer": "^2.8.0",
+    "hardhat-deploy": "^0.11.23",
+    "hardhat-gas-reporter": "^1.0.9",
+    "node-watch": "^0.7.3",
+    "ramda": "^0.28.0",
+    "solidity-coverage": "^0.8.2"
+  }
+}
