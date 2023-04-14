@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-
 contract DSPHUSDTConverter is Ownable {
     using SafeMath for uint256;
     using Counters for Counters.Counter;
@@ -25,11 +24,7 @@ contract DSPHUSDTConverter is Ownable {
     mapping(address => uint256) public addressToDSPHBoughtBalance;
     mapping(address => uint256) public addressToUSDTSoldBalance;
 
-    event ConvertedDSPH(
-        address user,
-        uint256 dsph,
-        uint256 usdt
-    );
+    event ConvertedDSPH(address user, uint256 dsph, uint256 usdt);
     event ChangeAvailability(bool available);
 
     // check if private sale is avalible
@@ -38,7 +33,10 @@ contract DSPHUSDTConverter is Ownable {
         _;
     }
 
-    constructor(address payable _dsphTokenAddress, address payable _usdtTokenAddress) {
+    constructor(
+        address payable _dsphTokenAddress,
+        address payable _usdtTokenAddress
+    ) {
         convertPrice = 50; // usdt
         minBuyPrice = 50 ether; // dsph
         // maxBuyPrice = 50 ether; // dsph
@@ -62,7 +60,6 @@ contract DSPHUSDTConverter is Ownable {
         minBuyPrice = price;
     }
 
-
     function tokenPrivateSaleStart() public onlyOwner {
         privateSaleAvalible = true;
         emit ChangeAvailability(true);
@@ -74,12 +71,12 @@ contract DSPHUSDTConverter is Ownable {
     }
 
     // get contract usdt balance
-    function getContractUSDTBalance() public view returns (uint256){
+    function getContractUSDTBalance() public view returns (uint256) {
         return usdt.balanceOf(address(this));
     }
 
     // get contract dsph balance
-    function getContractDSPHBalance() public view returns (uint256){
+    function getContractDSPHBalance() public view returns (uint256) {
         return dsph.balanceOf(address(this));
     }
 
@@ -97,9 +94,15 @@ contract DSPHUSDTConverter is Ownable {
 
     // conver function
     function convertDSPHToUSDT(uint tokenAmount) public {
-        require(dsph.transferFrom(msg.sender, address(this), tokenAmount), "Token transfer failed");
+        require(
+            dsph.transferFrom(msg.sender, address(this), tokenAmount),
+            "Token transfer failed"
+        );
         uint256 amountToSend = (tokenAmount / convertPrice);
-        require(usdt.transfer(msg.sender, amountToSend), "USDT transfer failed");
+        require(
+            usdt.transfer(msg.sender, amountToSend),
+            "USDT transfer failed"
+        );
 
         numberOfDSPHBought += tokenAmount;
         numberOfUSDTSold += amountToSend;
@@ -108,10 +111,6 @@ contract DSPHUSDTConverter is Ownable {
         addressToDSPHBoughtBalance[msg.sender] += tokenAmount;
         addressToUSDTSoldBalance[msg.sender] += amountToSend;
 
-        emit ConvertedDSPH(
-        msg.sender,
-        tokenAmount,
-        amountToSend
-        );
+        emit ConvertedDSPH(msg.sender, tokenAmount, amountToSend);
     }
 }
