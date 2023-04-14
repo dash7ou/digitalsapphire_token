@@ -25,6 +25,11 @@ contract DSPHUSDTConverter is Ownable {
     mapping(address => uint256) public addressToDSPHBoughtBalance;
     mapping(address => uint256) public addressToUSDTSoldBalance;
 
+    event ConvertedDSPH(
+        address user,
+        uint256 dsph,
+        uint256 usdt
+    );
     event ChangeAvailability(bool available);
 
     // check if private sale is avalible
@@ -34,7 +39,7 @@ contract DSPHUSDTConverter is Ownable {
     }
 
     constructor(address payable _dsphTokenAddress, address payable _usdtTokenAddress) {
-        convertPrice = 0.02 ether; // usdt
+        convertPrice = 50; // usdt
         minBuyPrice = 50 ether; // dsph
         // maxBuyPrice = 50 ether; // dsph
         dsph = ERC20(_dsphTokenAddress);
@@ -58,7 +63,7 @@ contract DSPHUSDTConverter is Ownable {
     }
 
 
-        function tokenPrivateSaleStart() public onlyOwner {
+    function tokenPrivateSaleStart() public onlyOwner {
         privateSaleAvalible = true;
         emit ChangeAvailability(true);
     }
@@ -92,12 +97,21 @@ contract DSPHUSDTConverter is Ownable {
 
     // conver function
     function convertDSPHToUSDT(uint tokenAmount) public {
-        uint256 dsphDecimals = uint256(dsph.decimals());
-        uint256 usdtDecimals = uint256(usdt.decimals());
-
-        uint256 amountToConvert = tokenAmount * (10 ** dsphDecimals);
-        require(dsph.transferFrom(msg.sender, address(this), amountToConvert), "Token transfer failed");
-        uint256 amountToSend = (tokenAmount * convertPrice) * (10 ** usdtDecimals);
+        require(dsph.transferFrom(msg.sender, address(this), tokenAmount), "Token transfer failed");
+        uint256 amountToSend = (tokenAmount / convertPrice);
         require(usdt.transfer(msg.sender, amountToSend), "USDT transfer failed");
+
+        numberOfDSPHBought += tokenAmount;
+        numberOfUSDTSold += amountToSend;
+        numberOfUserSellToken.increment();
+        usersSoldToken.push(msg.sender);
+        addressToDSPHBoughtBalance[msg.sender] += tokenAmount;
+        addressToUSDTSoldBalance[msg.sender] += amountToSend;
+
+        emit ConvertedDSPH(
+        msg.sender,
+        tokenAmount,
+        amountToSend
+        );
     }
 }
