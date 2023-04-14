@@ -94,6 +94,8 @@ contract DSPHUSDTConverter is Ownable {
 
     // conver function
     function convertDSPHToUSDT(uint tokenAmount) public checkPrivateSaleAvailability {
+        require(tokenAmount >= minBuyPrice, "Increase token value at least 1 USDT!");
+
         require(
             dsph.transferFrom(msg.sender, address(this), tokenAmount),
             "Token transfer failed"
