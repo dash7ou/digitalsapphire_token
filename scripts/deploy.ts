@@ -15,8 +15,14 @@ import { verify, sleep } from "../helper-functions";
 async function main() {
   console.log("\n\n 📡 Deploying...\n");
 
+  const chainId: any = network.config.chainId;
+
+  const dsphToken = networkConfig[chainId].dsphToken;
+  const usdtToken = networkConfig[chainId].usdtToken;
+
+
   const [deployer] = await ethers.getSigners();
-  const openergy: any = await deploy("DigitalSapphire", [], {}, {}, deployer);
+  const openergy: any = await deploy("DSPHUSDTConverter", [dsphToken, usdtToken], {}, {}, deployer);
 
   // await deploy("OPGPrivateSale", [openergy.address], {}, {}, deployer);
 

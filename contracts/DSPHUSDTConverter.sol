@@ -93,7 +93,7 @@ contract DSPHUSDTConverter is Ownable {
     }
 
     // conver function
-    function convertDSPHToUSDT(uint tokenAmount) public {
+    function convertDSPHToUSDT(uint tokenAmount) public checkPrivateSaleAvailability {
         require(
             dsph.transferFrom(msg.sender, address(this), tokenAmount),
             "Token transfer failed"
@@ -106,8 +106,10 @@ contract DSPHUSDTConverter is Ownable {
 
         numberOfDSPHBought += tokenAmount;
         numberOfUSDTSold += amountToSend;
-        numberOfUserSellToken.increment();
-        usersSoldToken.push(msg.sender);
+        if (addressToDSPHBoughtBalance[msg.sender] == 0) {
+            numberOfUserSellToken.increment();
+            usersSoldToken.push(msg.sender);
+        }
         addressToDSPHBoughtBalance[msg.sender] += tokenAmount;
         addressToUSDTSoldBalance[msg.sender] += amountToSend;
 
